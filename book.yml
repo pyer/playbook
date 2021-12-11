@@ -1,0 +1,16 @@
+- name: Configure all servers
+  hosts: all
+  roles:
+    - network
+    - ssh-server
+    - tools
+    
+- name: Configure dune
+  hosts: dune
+  roles:
+    - dhcp-server
+
+- name: Configure fuji
+  hosts: fuji
+  roles:
+

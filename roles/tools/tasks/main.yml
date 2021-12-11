@@ -1,0 +1,33 @@
+
+- name: install some tools
+  apt:
+    pkg:
+    - locate
+    - git
+    - ruby
+    - tree
+    - vim
+
+- name: remove Emacs package
+  apt:
+    name: emacsen-common
+    state: absent
+    purge: yes
+    autoremove: yes
+
+- name: remove Emacs config
+  file:
+    path: /etc/emacs
+    state: absent
+
+- name: root's bashrc
+  copy:
+    src:  root_bashrc
+    dest: /root/.bashrc
+
+# todo with variables
+- name: user's bashrc
+  copy:
+    src:  user_bashrc
+    dest: /home/pba/.bashrc
+

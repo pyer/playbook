@@ -1,0 +1,34 @@
+---
+
+#- name: Allow only the users we know
+#  lineinfile:
+#    dest: /etc/ssh/sshd_config
+#    regexp: "^AllowUsers .*"
+#    line: "AllowUsers pba"
+#  notify:
+#    - restart sshd
+
+- name: allow root access
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin +"
+    line: "PermitRootLogin yes"
+  notify:
+    - restart sshd
+
+- name: allow password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication +"
+    line: "PasswordAuthentication yes"
+  notify:
+    - restart sshd
+
+- name: disable empty password 
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitEmptyPasswords +"
+    line: "PermitEmptyPasswords no"
+  notify:
+    - restart sshd
+

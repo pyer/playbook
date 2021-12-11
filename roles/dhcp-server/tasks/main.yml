@@ -1,0 +1,14 @@
+
+- name: install
+  apt:
+    name: isc-dhcp-server
+    state: present
+
+- name: subnet configuration
+  blockinfile:
+    path: /etc/dhcp/dhcpd.conf
+    block: |
+      subnet 192.168.2.0 netmask 255.255.255.0 {
+        range 192.168.2.128 192.168.2.249;
+      }
+
