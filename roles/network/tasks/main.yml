@@ -4,6 +4,7 @@
     src: roles/network/files/interfaces
     dest: /etc/network/interfaces
     backup: yes
+  when: ansible_facts['hostname'] == "dune"
 
 - name: default DNS
   lineinfile:
