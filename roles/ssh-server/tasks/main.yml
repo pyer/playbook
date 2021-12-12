@@ -1,13 +1,5 @@
 ---
 
-#- name: Allow only the users we know
-#  lineinfile:
-#    dest: /etc/ssh/sshd_config
-#    regexp: "^AllowUsers .*"
-#    line: "AllowUsers pba"
-#  notify:
-#    - restart sshd
-
 - name: allow root access
   lineinfile:
     dest: /etc/ssh/sshd_config
@@ -16,11 +8,11 @@
   notify:
     - restart sshd
 
-- name: allow password authentication
+- name: disable password authentication
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PasswordAuthentication +"
-    line: "PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
   notify:
     - restart sshd
 
@@ -31,4 +23,26 @@
     line: "PermitEmptyPasswords no"
   notify:
     - restart sshd
+
+- name: allow only known users
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowUsers .*"
+    line: "AllowUsers root pba"
+  notify:
+    - restart sshd
+
+- name: create user's .ssh directory
+  file:
+    path:  /home/{{item}}/.ssh
+    state: directory
+  loop:
+    - pba
+
+- name: update user's .ssh/authorized_keys
+  copy:
+    src:  authorized_keys 
+    dest: /home/{{item}}/.ssh/authorized_keys
+  loop:
+    - pba
 
