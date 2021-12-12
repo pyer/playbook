@@ -1,4 +1,4 @@
 #!/bin/bash
 # Arguments are passed to ansible-playbook
 # Useful args are -C|--check and -l|--limit
-ansible-playbook -i hosts $* book.yml
+ansible-playbook -i hosts $* book.yaml

@@ -1,6 +1,7 @@
 - name: Configure all servers
   hosts: all
   roles:
+    - system
     - network
     - ssh-server
     - tools
