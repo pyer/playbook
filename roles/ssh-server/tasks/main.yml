@@ -34,15 +34,21 @@
 
 - name: create user's .ssh directory
   file:
-    path:  /home/{{item}}/.ssh
+    path:  "/home/{{item}}/.ssh"
     state: directory
+    owner: "{{item}}"
+    group: "{{item}}"
+    mode:  0700
   loop:
     - pba
 
 - name: update user's .ssh/authorized_keys
   copy:
     src:  authorized_keys 
-    dest: /home/{{item}}/.ssh/authorized_keys
+    dest: "/home/{{item}}/.ssh/authorized_keys"
+    owner: "{{item}}"
+    group: "{{item}}"
+    mode:  0600
   loop:
     - pba
 
