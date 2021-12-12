@@ -11,7 +11,7 @@ iface lo inet loopback
 allow-hotplug enp3s0
 #iface enp3s0 inet dhcp
 iface enp3s0 inet static
-  address 192.168.2.1
+  address {{ansible_host}}
   netmask 255.255.255.0
   gateway 192.168.2.128
 

@@ -1,10 +1,9 @@
 ---
 - name: interfaces
-  copy:
-    src: roles/network/files/interfaces
+  template:
+    src: interfaces.j2
     dest: /etc/network/interfaces
     backup: yes
-  when: ansible_facts['hostname'] == "dune"
 
 - name: default DNS
   lineinfile:
