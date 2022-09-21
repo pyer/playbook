@@ -1,5 +1,7 @@
 - name: Configure all servers
-  hosts: all
+  hosts:
+    - dune
+    - fuji
   roles:
     - system
     - network
@@ -14,4 +16,3 @@
 - name: Configure fuji
   hosts: fuji
   roles:
-
