@@ -1,0 +1,49 @@
+
+- name: Install nginx package
+  become: yes
+  ansible.builtin.package:
+    name:     nginx
+    state:    present
+
+- name: Enable nginx service
+  become: yes
+  ansible.builtin.service:
+    name:     nginx
+    enabled:  true
+    state:    started
+
+- name: Delete default site
+  become: yes
+  ansible.builtin.file:
+    path:  "/etc/nginx/sites-enabled/default"
+    state: absent
+  notify: reload
+
+- name: Create web site directory
+  become: yes
+  ansible.builtin.file:
+    path:  "/srv/www"
+    state: directory
+    owner: root
+    group: root
+    mode:  0755
+  notify: reload
+
+- name: Create www site
+  become: yes
+  ansible.builtin.copy:
+    src:   "www"
+    dest:  "/etc/nginx/sites-available/www"
+    owner: root
+    group: root
+    mode:  0644
+  notify: reload
+
+- name: Enable www site
+  become: yes
+  ansible.builtin.file:
+    src:   "/etc/nginx/sites-available/www"
+    dest:  "/etc/nginx/sites-enabled/www"
+    state: link
+  notify: reload
+
