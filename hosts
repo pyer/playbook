@@ -1,6 +1,7 @@
 [all]
 dune ansible_user=root ansible_host=192.168.2.1
 fuji ansible_user=root ansible_host=192.168.2.2
+wylie ansible_user=ansible ansible_host=46.226.105.89
 
 #[tmp]
 #dell390    ansible_user=pierre ansible_host=192.168.1.128

@@ -16,3 +16,9 @@
 - name: Configure fuji
   hosts: fuji
   roles:
+
+- name: Configure wylie
+  hosts: wylie
+  roles:
+    - nginx
+
