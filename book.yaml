@@ -2,11 +2,12 @@
   hosts:
     - dune
     - fuji
+    - wylie
   roles:
     - system
-    - network
-    - ssh-server
-    - tools
+#    - network
+#    - ssh-server
+#    - tools
     
 - name: Configure dune
   hosts: dune

@@ -1,9 +1,32 @@
 
-- name: message of the day
+- name: Message of the day
+  become: yes
   copy:
     src:   motd
     dest:  /etc/motd
     owner: root
     group: root
+    mode:  0644
+
+- name: Set time zone
+  become: yes
+  ansible.builtin.file:
+    src:   "/usr/share/zoneinfo/Europe/Paris"
+    dest:  "/etc/localtime"
+    state: link
+
+- name: Create user 'pierre'
+  become: yes
+  ansible.builtin.user:
+    name: pierre
+    create_home: yes
+
+- name: User's configuration
+  become: yes
+  copy:
+    src:   bashrc
+    dest:  /home/pierre/.bashrc
+    owner: pierre
+    group: pierre
     mode:  0644
 
