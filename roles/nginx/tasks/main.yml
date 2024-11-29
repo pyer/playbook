@@ -19,17 +19,17 @@
     state: absent
   notify: reload
 
-- name: Create web site directory
+- name: www site directory is created
   become: yes
   ansible.builtin.file:
     path:  "/srv/www"
     state: directory
-    owner: root
-    group: root
+    owner: pierre
+    group: pierre
     mode:  0755
   notify: reload
 
-- name: Create www site
+- name: www site is available
   become: yes
   ansible.builtin.copy:
     src:   "www"
@@ -39,7 +39,7 @@
     mode:  0644
   notify: reload
 
-- name: Enable www site
+- name: www site is enabled
   become: yes
   ansible.builtin.file:
     src:   "/etc/nginx/sites-available/www"
@@ -47,3 +47,45 @@
     state: link
   notify: reload
 
+- name: Install certbot packages
+  become: yes
+  ansible.builtin.package:
+    name:     "{{item}}"
+    state:    present
+  loop:
+    - python3
+    - python3-venv
+    - libaugeas0
+
+# sudo python3 -m venv /opt/certbot/
+# sudo /opt/certbot/bin/pip install --upgrade pip
+#
+- name: Enable pip command for certbot
+  become: yes
+  ansible.builtin.file:
+    src:   "/opt/certbot/bin/pip"
+    dest:  "/usr/bin/pip"
+    state: link
+
+- name: Install certbot pip packages
+  become: yes
+  ansible.builtin.pip:
+    name:       "{{item}}"
+    virtualenv: "/opt/certbot/"
+  loop:
+    - certbot
+    - certbot-nginx
+
+- name: Enable certbot command
+  become: yes
+  ansible.builtin.file:
+    src:   "/opt/certbot/bin/certbot"
+    dest:  "/usr/bin/certbot"
+    state: link
+
+
+# - name: Set up certbot's automatic renewal
+# echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; time.sleep(random.random() * 3600)' && sudo certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
+#
+# monthly
+# sudo /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
