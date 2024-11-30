@@ -1,0 +1,6 @@
+[Unit]
+Description=Renew nginx certificate
+
+[Service]
+Type=oneshot
+ExecStart=/opt/certbot/bin/certbot renew -q

@@ -1,0 +1,10 @@
+[Unit]
+Description=Renew nginx certificate
+
+[Timer]
+OnCalendar=*-*-* 00,12:00:00
+Persistent=false
+AccuracySec=3m
+
+[Install]
+WantedBy=timers.target

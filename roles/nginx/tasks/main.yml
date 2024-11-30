@@ -83,9 +83,24 @@
     dest:  "/usr/bin/certbot"
     state: link
 
-
-# - name: Set up certbot's automatic renewal
-# echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; time.sleep(random.random() * 3600)' && sudo certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
-#
 # monthly
 # sudo /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
+- name: Install renewal of nginx certificate service and timer
+  become: yes
+  ansible.builtin.copy:
+    src:   "{{item}}"
+    dest:  "/etc/systemd/system/{{item}}"
+    owner: root
+    group: root
+    mode:  0644
+  loop:
+    - certbot.service
+    - certbot.timer
+   
+- name: Enable renewal of nginx certificate at noon and midnight every day
+  become: yes
+  ansible.builtin.systemd:
+    name: "certbot.timer"
+    enabled: true
+    daemon_reload: true
+
