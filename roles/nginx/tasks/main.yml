@@ -30,6 +30,7 @@
   notify: reload
   loop:
     - "public"
+    - "private"
     - "www"
 
 - name: Configure sites
@@ -43,6 +44,7 @@
   notify: reload
   loop:
     - "public"
+    - "private"
     - "www"
 
 - name: Enable sites
@@ -54,6 +56,7 @@
   notify: reload
   loop:
     - "public"
+    - "private"
     - "www"
 
 - name: Install public favicon.ico
@@ -64,6 +67,27 @@
     owner: pierre
     group: pierre
     mode:  0444
+
+- name: Install private favicon.ico
+  become: yes
+  ansible.builtin.copy:
+    src:   "favicon.ico"
+    dest:  "/srv/private/favicon.ico"
+    owner: pierre
+    group: pierre
+    mode:  0444
+
+# Create the htpasswd file for the user admin:
+# htpasswd -c roles/nginx/files/htpasswd admin
+
+- name: Install private passwords file
+  become: yes
+  ansible.builtin.copy:
+    src:   "htpasswd"
+    dest:  "/etc/nginx/htpasswd"
+    owner: root
+    group: root
+    mode:  0644
 
 - name: Install certbot packages
   become: yes
