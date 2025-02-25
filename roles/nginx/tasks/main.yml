@@ -19,33 +19,51 @@
     state: absent
   notify: reload
 
-- name: www site directory is created
+- name: Create sites directories
   become: yes
   ansible.builtin.file:
-    path:  "/srv/www"
+    path:  "/srv/{{item}}"
     state: directory
     owner: pierre
     group: pierre
     mode:  0755
   notify: reload
+  loop:
+    - "public"
+    - "www"
 
-- name: www site is available
+- name: Configure sites
   become: yes
   ansible.builtin.copy:
-    src:   "www"
-    dest:  "/etc/nginx/sites-available/www"
+    src:   "{{item}}"
+    dest:  "/etc/nginx/sites-available/{{item}}"
     owner: root
     group: root
     mode:  0644
   notify: reload
+  loop:
+    - "public"
+    - "www"
 
-- name: www site is enabled
+- name: Enable sites
   become: yes
   ansible.builtin.file:
-    src:   "/etc/nginx/sites-available/www"
-    dest:  "/etc/nginx/sites-enabled/www"
+    src:   "/etc/nginx/sites-available/{{item}}"
+    dest:  "/etc/nginx/sites-enabled/{{item}}"
     state: link
   notify: reload
+  loop:
+    - "public"
+    - "www"
+
+- name: Install public favicon.ico
+  become: yes
+  ansible.builtin.copy:
+    src:   "favicon.ico"
+    dest:  "/srv/public/favicon.ico"
+    owner: pierre
+    group: pierre
+    mode:  0444
 
 - name: Install certbot packages
   become: yes
@@ -82,6 +100,9 @@
     src:   "/opt/certbot/bin/certbot"
     dest:  "/usr/bin/certbot"
     state: link
+
+# Create the certificates or add a certificate for a new sub-domain:
+# sudo /opt/certbot/bin/certbot run
 
 # monthly
 # sudo /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
