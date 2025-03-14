@@ -43,6 +43,7 @@
     mode:  0644
   notify: reload
   loop:
+    - "mon"
     - "public"
     - "private"
     - "www"
@@ -55,6 +56,7 @@
     state: link
   notify: reload
   loop:
+    - "mon"
     - "public"
     - "private"
     - "www"

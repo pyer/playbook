@@ -1,0 +1,13 @@
+---
+- name: restart
+  become: yes
+  service:
+    name=monitorix
+    state=restarted
+
+- name: reload
+  become: yes
+  service:
+    name=monitorix
+    state=reloaded
+

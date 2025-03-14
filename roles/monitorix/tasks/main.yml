@@ -1,0 +1,24 @@
+
+- name: Install package
+  become: yes
+  ansible.builtin.package:
+    name:     monitorix
+    state:    present
+
+- name: Enable service
+  become: yes
+  ansible.builtin.service:
+    name:     monitorix
+    enabled:  true
+    state:    started
+
+- name: Configure service
+  become: yes
+  ansible.builtin.copy:
+    src:   monitorix.conf
+    dest:  /etc/monitorix/monitorix.conf
+    owner: root
+    group: root
+    mode:  0644
+  notify: reload
+

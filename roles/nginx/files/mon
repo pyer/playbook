@@ -1,0 +1,38 @@
+# Monitorix server configuration
+#
+server {
+    # SSL configuration
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/bazonnard.fr/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/bazonnard.fr/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+    server_name mon.bazonnard.fr;
+    root /srv/mon;
+    index index.html;
+    autoindex on;
+
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Host $host; # Forwarded host
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#        proxy_set_header X-Forwarded-Proto https;
+        proxy_redirect off;
+    }
+}
+
+server {
+    if ($host = mon.bazonnard.fr) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    listen [::]:80;
+
+    server_name mon.bazonnard.fr;
+    return 404; # managed by Certbot
+}
+
