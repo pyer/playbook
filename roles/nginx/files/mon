@@ -4,15 +4,15 @@ server {
     # SSL configuration
     listen [::]:443 ssl; # managed by Certbot
     listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/bazonnard.fr/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/bazonnard.fr/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/mon.bazonnard.fr/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/mon.bazonnard.fr/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
     server_name mon.bazonnard.fr;
-    root /srv/mon;
+    root /var/lib/monitorix/www;
     index index.html;
-    autoindex on;
+    autoindex off;
 
     location / {
         proxy_pass http://localhost:8080;
@@ -22,6 +22,7 @@ server {
 #        proxy_set_header X-Forwarded-Proto https;
         proxy_redirect off;
     }
+
 }
 
 server {
