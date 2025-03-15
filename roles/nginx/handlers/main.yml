@@ -1,11 +1,11 @@
 ---
-- name: restart
+- name: restart Nginx
   become: yes
   service:
     name=nginx
     state=restarted
 
-- name: reload
+- name: reload Nginx
   become: yes
   service:
     name=nginx

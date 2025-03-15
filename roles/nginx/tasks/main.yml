@@ -17,7 +17,7 @@
   ansible.builtin.file:
     path:  "/etc/nginx/sites-enabled/default"
     state: absent
-  notify: reload
+  notify: reload Nginx
 
 - name: Create sites directories
   become: yes
@@ -27,7 +27,7 @@
     owner: pierre
     group: pierre
     mode:  0755
-  notify: reload
+  notify: reload Nginx
   loop:
     - "public"
     - "private"
@@ -41,7 +41,7 @@
     owner: root
     group: root
     mode:  0644
-  notify: reload
+  notify: reload Nginx
   loop:
     - "mon"
     - "public"
@@ -54,7 +54,7 @@
     src:   "/etc/nginx/sites-available/{{item}}"
     dest:  "/etc/nginx/sites-enabled/{{item}}"
     state: link
-  notify: reload
+  notify: reload Nginx
   loop:
     - "mon"
     - "public"
