@@ -1,13 +1,7 @@
 ---
-- name: restart
+- name: restart Monitorix
   become: yes
   service:
     name=monitorix
     state=restarted
-
-- name: reload
-  become: yes
-  service:
-    name=monitorix
-    state=reloaded
 

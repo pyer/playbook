@@ -20,5 +20,15 @@
     owner: root
     group: root
     mode:  0644
-  notify: reload
+  notify: restart Monitorix
+
+- name: Install cgi script
+  become: yes
+  ansible.builtin.copy:
+    src:   monitorix.cgi 
+    dest:  /var/lib/monitorix/www/cgi/monitorix.cgi
+    owner: root
+    group: root
+    mode:  0755
+  notify: restart Monitorix
 
