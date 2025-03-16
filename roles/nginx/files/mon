@@ -14,6 +14,12 @@ server {
     index index.html;
     autoindex off;
 
+    # error_log /var/log/nginx/debug.log debug;
+
+    location = / {
+      index index.html;
+    }
+
     location / {
         proxy_pass http://localhost:8080;
         proxy_set_header Host $host; # Forwarded host
