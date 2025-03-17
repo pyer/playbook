@@ -32,3 +32,13 @@
     mode:  0755
   notify: restart Monitorix
 
+- name: Install home page
+  become: yes
+  ansible.builtin.copy:
+    src:   home.html
+    dest:  /var/lib/monitorix/www/home.html
+    owner: root
+    group: root
+    mode:  0644
+  notify: restart Monitorix
+

@@ -11,13 +11,12 @@ server {
 
     server_name mon.bazonnard.fr;
     root /var/lib/monitorix/www;
-    index index.html;
     autoindex off;
 
     # error_log /var/log/nginx/debug.log debug;
 
     location = / {
-      index index.html;
+      index home.html;
     }
 
     location / {
