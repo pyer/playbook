@@ -16,7 +16,7 @@ server {
     # error_log /var/log/nginx/debug.log debug;
 
     location = / {
-      index home.html;
+      index index.html;
     }
 
     location / {

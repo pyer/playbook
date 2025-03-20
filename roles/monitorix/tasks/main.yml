@@ -5,12 +5,15 @@
     name:     monitorix
     state:    present
 
-- name: Enable service
+- name: Install service
   become: yes
-  ansible.builtin.service:
-    name:     monitorix
-    enabled:  true
-    state:    started
+  ansible.builtin.copy:
+    src:   monitorix
+    dest:  /usr/bin/monitorix
+    owner: root
+    group: root
+    mode:  0755
+  notify: restart Monitorix
 
 - name: Configure service
   become: yes
@@ -32,11 +35,31 @@
     mode:  0755
   notify: restart Monitorix
 
-- name: Install home page
+- name: Enable service
+  become: yes
+  ansible.builtin.service:
+    name:     monitorix
+    enabled:  true
+    state:    started
+
+- name: Install css
   become: yes
   ansible.builtin.copy:
-    src:   home.html
-    dest:  /var/lib/monitorix/www/home.html
+    src:   "{{item}}.css"
+    dest:  "/var/lib/monitorix/www/css/{{item}}.css"
+    owner: root
+    group: root
+    mode:  0644
+  loop:
+    - black
+    - white
+  notify: restart Monitorix
+
+- name: Install index.html
+  become: yes
+  ansible.builtin.copy:
+    src:   index.html
+    dest:  /var/lib/monitorix/www/index.html
     owner: root
     group: root
     mode:  0644
