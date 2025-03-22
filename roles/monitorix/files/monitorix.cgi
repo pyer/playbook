@@ -42,16 +42,47 @@ my @version12_small;
 
 
 sub page_header {
-  my ($logo, $title, $twhen) = @_;
+  my ($logo, $title) = @_;
 
   print("  <body>\n");
-#  print("    <img src=\"$logo\" border=\"0\">\n");
-  print("    <h1>$title&nbsp;&nbsp;-&nbsp;&nbsp;last&nbsp;$twhen</h1>\n");
-  print("    <img src=\"$logo\" border=\"0\">\n");
-  print encode('utf-8', "    <h4 class='text-title-date'>" . strftime("%a %b %e %H:%M:%S %Z %Y", localtime) . "</h4>\n");
+  print("  <div class=\"banner\">\n");
+  print("    <div class=\"logo\">\n");
+  print("      <img src=\"$logo\" border=\"0\">\n");
+  print("      <sup>3.16</sup>\n");
+  print("    </div>\n");
+  print("    <h1>$title</h1>\n");
+  print encode('utf-8', "    <h4>" . strftime("%a %b %e %H:%M:%S %Z %Y", localtime) . "</h4>\n");
+  print("  </div>\n");
+  print("  <div class=\"select-when\">\n");
+  print("    <form action=\"monitorix.cgi\" method=\"get\">\n");
+  print("        <input type=\"hidden\" name=\"mode\" value=\"localhost\">\n");
+  print("        <input type=\"hidden\" name=\"graph\" value=\"all\">\n");
+  print("        <input type=\"hidden\" name=\"color\" value=\"white\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"1hour\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"2hours\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"3hours\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"6hours\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"12hours\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"1day\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"2days\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"3days\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"4days\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"1week\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"2weeks\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"3weeks\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"1month\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"2months\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"3months\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"6months\">\n");
+  print("        <input type=\"submit\" name=\"when\" value=\"1year\">\n");
+  print("    </form>\n");
+  print("  </div>\n");
+  print("  <center>\n");
 }
 
+
 sub page_footer {
+  print("  </center>\n");
   print("  </body>\n");
   print("</html>\n");
 }
@@ -60,7 +91,6 @@ sub page_footer {
 sub graph_header {
   my ($title, $colspan) = @_;
   my @output;
-
   push(@output, "\n");
   push(@output, "<!-- graph table begins -->\n");
   push(@output, "  <table class='table-module' width='1' >\n");
@@ -74,7 +104,6 @@ sub graph_header {
 
 sub graph_footer {
   my @output;
-
   push(@output, "  </table>\n");
   push(@output, "<!-- graph table ends -->\n");
   return @output;
@@ -147,18 +176,6 @@ $colors{title_fg_color} = $config{theme}->{$color}->{title_fg};
 $colors{graph_bg_color} = $config{theme}->{$color}->{graph_bg};
 $colors{gap} = $config{theme}->{$color}->{gap};
 
-
-($tf{twhen}) = ($when =~ m/^\d+(hour|day|week|month|year)$/);
-($tf{nwhen} = $when) =~ s/$tf{twhen}// unless !$tf{twhen};
-$tf{nwhen} = 1 unless $tf{nwhen};
-$tf{twhen} = "day" unless $tf{twhen};
-$tf{when} = $tf{nwhen} . $tf{twhen};
-
-# toggle this to 1 if you want to maintain old (2.3-) Monitorix with Multihost
-if($config{backwards_compat_old_multihost}) {
-  $tf{when} = $tf{twhen};
-}
-
 # make sure that some options are correctly defined
 if(!$config{global_zoom}) {
   $config{global_zoom} = 1;
@@ -166,6 +183,12 @@ if(!$config{global_zoom}) {
 if(!$config{image_format}) {
   $config{image_format} = "PNG";
 }
+
+
+($tf{nwhen}) = ($when =~ m/^(\d+).*$/);
+($tf{twhen}) = ($when =~ m/^\d+(hour|day|week|month|year)s?$/);
+$tf{nwhen} = 1 unless $tf{nwhen};
+$tf{twhen} = "day" unless $tf{twhen};
 
 our ($res, $tc, $tb, $ts);
 if($tf{twhen} eq "day") {
@@ -181,35 +204,20 @@ if($tf{twhen} eq "year") {
   ($tf{res}, $tf{tc}, $tf{tb}, $tf{ts}) = (5184000, 'd', 365, 1);
 }
 
+$tf{twhen} = " " . $tf{twhen};
+$tf{twhen} = $tf{twhen} . "s" if $tf{nwhen} > 1;
 
-if($RRDs::VERSION > 1.2) {
   push(@version12, "--slope-mode");
   push(@version12, "--font=LEGEND:7:");
   push(@version12, "--font=TITLE:9:");
   push(@version12, "--font=UNIT:8:");
-  if($RRDs::VERSION >= 1.3) {
-    push(@version12, "--font=DEFAULT:0:Mono");
-  }
+  push(@version12, "--font=DEFAULT:0:Mono");
   if($tf{twhen} eq "day") {
     push(@version12, "--x-grid=HOUR:1:HOUR:6:HOUR:6:0:%R");
   }
   push(@version12_small, "--font=TITLE:8:");
   push(@version12_small, "--font=UNIT:7:");
-  if($RRDs::VERSION >= 1.3) {
-    push(@version12_small, "--font=DEFAULT:0:Mono");
-  }
-}
-
-
-my $title;
-my $str;
-my @output;
-
-$title = $config{hostname};
-$title =~ s/ /&nbsp;/g;
-my $twhen = $tf{nwhen} > 1 ? "$tf{nwhen} $tf{twhen}" : $tf{twhen};
-$twhen .= "s" if $tf{nwhen} > 1;
-
+  push(@version12_small, "--font=DEFAULT:0:Mono");
 
 print("<!DOCTYPE html>\n");
 print("<html>\n");
@@ -225,9 +233,10 @@ print("    <meta name='mobile-web-app-status-bar-style' content='black' />\n");
 print("  </head>\n");
 
 my $logo = "/$config{logo_top}";
+my $title = $config{hostname};
+$title =~ s/ /&nbsp;/g;
 
-
-page_header($logo, $title, $twhen);
+page_header($logo, $title);
 
 $cgi{colors} = \%colors;
 $cgi{tf} = \%tf;
@@ -239,6 +248,7 @@ $cgi{color} = $color;
 $cgi{val} = $val;
 $cgi{silent} = $silent;
 
+my @output;
   my %outputs;  # a hash of arrays
   my @readers;  # array of file descriptors
   my @writers;  # array of file descriptors
