@@ -12,6 +12,16 @@
     enabled:  true
     state:    started
 
+- name: Configure nginx
+  become: yes
+  ansible.builtin.lineinfile:
+    path:  "/etc/nginx/nginx.conf"
+    state: present
+    search_string: 'server_tokens'
+    insertafter: '^http {$'
+    line:  "        server_tokens off;"
+  notify: restart Nginx
+
 - name: Delete default site
   become: yes
   ansible.builtin.file:
