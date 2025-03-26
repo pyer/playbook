@@ -1,22 +1,7 @@
-- name: Configure all servers
-  hosts:
-    - dune
-    - fuji
-    - wylie
-  roles:
-    - system
-#    - network
-#    - ssh-server
-#    - tools
-    
-- name: Configure dune
-  hosts: dune
-  roles:
-    - dhcp-server
-
-- name: Configure fuji
-  hosts: fuji
-  roles:
+#- name: Configure dune
+#  hosts: dune
+#  roles:
+#    - dhcp-server
 
 - name: Configure katana
   hosts: katana
@@ -27,4 +12,5 @@
   roles:
     - monitorix
     - nginx
+    - system
 
