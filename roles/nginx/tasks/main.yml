@@ -41,6 +41,7 @@
   loop:
     - "public"
     - "private"
+    - "spy"
     - "www"
 
 - name: Configure sites
@@ -56,6 +57,7 @@
     - "mon"
     - "private"
     - "public"
+    - "spy"
     - "status"
     - "www"
 
@@ -70,26 +72,23 @@
     - "mon"
     - "private"
     - "public"
+    - "spy"
     - "status"
     - "www"
 
-- name: Install public favicon.ico
+- name: Install some favicon.ico
   become: yes
   ansible.builtin.copy:
     src:   "favicon.ico"
-    dest:  "/srv/public/favicon.ico"
+    dest:  "/srv/{{item}}/favicon.ico"
     owner: pierre
     group: pierre
     mode:  0444
+  loop:
+    - "private"
+    - "public"
+    - "spy"
 
-- name: Install private favicon.ico
-  become: yes
-  ansible.builtin.copy:
-    src:   "favicon.ico"
-    dest:  "/srv/private/favicon.ico"
-    owner: pierre
-    group: pierre
-    mode:  0444
 
 # Create the htpasswd file for the user admin:
 # htpasswd -c roles/nginx/files/htpasswd admin
