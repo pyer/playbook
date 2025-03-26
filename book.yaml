@@ -18,6 +18,10 @@
   hosts: fuji
   roles:
 
+- name: Configure katana
+  hosts: katana
+  roles:
+
 - name: Configure wylie
   hosts: wylie
   roles:
