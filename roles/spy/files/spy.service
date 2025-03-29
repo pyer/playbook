@@ -1,0 +1,9 @@
+[Unit]
+Description=Spy
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/spy
+
+[Install]
+WantedBy=multi-user.target

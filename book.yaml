@@ -12,5 +12,6 @@
   roles:
     - monitorix
     - nginx
+    - spy
     - system
 

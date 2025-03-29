@@ -1,0 +1,26 @@
+
+- name: Install application
+  become: yes
+  ansible.builtin.copy:
+    src:   spy
+    dest:  /usr/bin/spy
+    owner: root
+    group: root
+    mode:  0755
+
+- name: Install service
+  become: yes
+  ansible.builtin.copy:
+    src:   spy.service
+    dest:  /etc/systemd/system/spy.service
+    owner: root
+    group: root
+    mode:  0644
+
+- name: Enable service
+  become: yes
+  ansible.builtin.service:
+    name:     spy
+    enabled:  true
+    state:    started
+
