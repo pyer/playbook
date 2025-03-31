@@ -1,0 +1,7 @@
+---
+- name: restart Spy
+  become: yes
+  service:
+    name=spy
+    state=restarted
+

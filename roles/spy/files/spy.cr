@@ -1,5 +1,7 @@
 require "http/server"
 require "http/headers"
+require "http/client"
+require "json"
 
 
 HEAD = "<!DOCTYPE html>
@@ -24,6 +26,7 @@ FOOT = "
         document.getElementById(\"platform\").innerHTML = navigator.platform;
         document.getElementById(\"vendor\").innerHTML   = navigator.vendor;
         document.getElementById(\"product\").innerHTML  = navigator.product;
+
       </script>
     </body>
   </html>"
@@ -31,6 +34,20 @@ FOOT = "
 
 class Appli
   include HTTP::Handler
+
+  def get_ip_api(ip : String) : String
+    response = HTTP::Client.get("http://ip-api.com/json/" + ip)
+    return "Error " + response.status_code.to_s if response.status_code != 200
+    items = ""
+    response.body.lines.each { |line|
+      item = JSON.parse(line)
+      item.as_h.each { |key, value|
+        item = "<p>" + key + " : " + value.to_s + "</p>\n"
+        items += item
+      }
+    }
+    return items
+  end
 
   def call(context : HTTP::Server::Context)
     begin
@@ -47,6 +64,9 @@ class Appli
       str = "<p>X-Forwarded-For: " + headers["X-Forwarded-for"].to_s + "</p>\n"
       response += str
       response += BODY
+      response += "<div>"
+      response += get_ip_api(headers["X-Real-IP"].to_s)
+      response += "</div>"
       response += FOOT
       context.response.puts(response)
     rescue KeyError
