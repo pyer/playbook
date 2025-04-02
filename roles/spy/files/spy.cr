@@ -19,13 +19,23 @@ HEAD = "<!DOCTYPE html>
 BODY = "
         <p>Platform: <span id=\"platform\"></span></p>
         <p>Vendor: <span id=\"vendor\"></span></p>
-        <p>Product: <span id=\"product\"></span></p>"
+        <p>Product: <span id=\"product\"></span></p>
+        <p>Color depth: <span id=\"colors\"></span> bits</p>
+        <p>Screen width: <span id=\"screenW\"></span> pixels</p>
+        <p>Screen height: <span id=\"screenH\"></span> pixels</p>
+        <p>Window width: <span id=\"windowW\"></span> pixels</p>
+        <p>Window height: <span id=\"windowH\"></span> pixels</p>"
 
 FOOT = "
       <script>
         document.getElementById(\"platform\").innerHTML = navigator.platform;
         document.getElementById(\"vendor\").innerHTML   = navigator.vendor;
         document.getElementById(\"product\").innerHTML  = navigator.product;
+        document.getElementById(\"colors\").innerHTML   = window.screen.colorDepth;
+        document.getElementById(\"screenW\").innerHTML  = window.screen.width;
+        document.getElementById(\"screenH\").innerHTML  = window.screen.height;
+        document.getElementById(\"windowW\").innerHTML  = window.innerWidth;
+        document.getElementById(\"windowH\").innerHTML  = window.innerHeight;
 
       </script>
     </body>
