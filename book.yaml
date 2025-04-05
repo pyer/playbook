@@ -1,6 +1,6 @@
-#- name: Configure dune
-#  hosts: dune
-#  roles:
+- name: Configure dune
+  hosts: dune
+  roles:
 #    - dhcp-server
 
 - name: Configure katana
