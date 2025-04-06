@@ -1,0 +1,6 @@
+#!/bin/bash
+
+[ -f Makefile ] && make clean $@
+[ -f Rakefile ] && rake clean $@
+[ -f nut.yaml ] && nut clean $@
+find . -type f -name "*~" -delete

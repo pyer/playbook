@@ -6,6 +6,8 @@
 - name: Configure katana
   hosts: katana
   roles:
+    - tools
+    - system
 
 - name: Configure wylie
   hosts: wylie

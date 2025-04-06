@@ -1,33 +1,29 @@
 
-- name: install some tools
-  apt:
-    pkg:
+- name: Install tools packages
+  become: yes
+  ansible.builtin.package:
+    name:     "{{item}}"
+    state:    present
+  loop:
     - locate
+    - gcc
     - git
+    - gnome-screenshot
+    - google-chrome-stable
+    - make
     - ruby
+    - ruby-devel
     - tree
-    - vim
 
-- name: remove Emacs package
-  apt:
-    name: emacsen-common
-    state: absent
-    purge: yes
-    autoremove: yes
-
-- name: remove Emacs config
-  file:
-    path: /etc/emacs
-    state: absent
-
-- name: root's bashrc
-  copy:
-    src:  root_bashrc
-    dest: /root/.bashrc
-
-# todo with variables
-- name: user's bashrc
-  copy:
-    src:  user_bashrc
-    dest: /home/pba/.bashrc
+- name: Install dev tools
+  become: yes
+  ansible.builtin.copy:
+    src:   "{{item}}"
+    dest:  "/bin/{{item}}"
+    owner: root
+    group: root
+    mode:  0755
+  loop:
+    - build
+    - clean
 

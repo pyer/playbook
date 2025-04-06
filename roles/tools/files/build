@@ -1,0 +1,7 @@
+#!/bin/bash
+
+[ -f Makefile ] && make $@
+[ -f Rakefile ] && rake $@
+[ -f nut.yaml ] && nut build $@
+[ -f "$1.cr" ] && crystal build -p -s $1.cr -o $@
+

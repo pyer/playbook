@@ -1,7 +1,27 @@
 
+- name: Install missing packages
+  become: yes
+  ansible.builtin.package:
+    name:     "{{item}}"
+    state:    present
+  loop:
+    - vim
+
+- name: Uninstall Emacs package
+  become: yes
+  ansible.builtin.package:
+    name:  emacsen-common
+    state: absent
+
+- name: Remove Emacs config
+  become: yes
+  ansible.builtin.file:
+    path:  /etc/emacs
+    state: absent
+
 - name: Message of the day
   become: yes
-  copy:
+  ansible.builtin.copy:
     src:   motd
     dest:  /etc/motd
     owner: root
@@ -15,18 +35,55 @@
     dest:  "/etc/localtime"
     state: link
 
-- name: Create user 'pierre'
+- name: Cleanup profile
+  become: yes
+  ansible.builtin.file:
+    path:  "/etc/profile.d/{{item}}"
+    state: absent
+  loop:
+    - nano-default-editor.csh
+    - nano-default-editor.sh
+
+- name: Configure profile
+  become: yes
+  ansible.builtin.copy:
+    src:   "{{item}}"
+    dest:  "/etc/profile.d/{{item}}"
+    owner: root
+    group: root
+    mode:  0644
+  loop:
+    - default-editor.sh
+
+- name: Create users
   become: yes
   ansible.builtin.user:
-    name: pierre
+    name: "{{item}}"
     create_home: yes
+  loop:
+    - guest
+    - pierre
 
-- name: User's configuration
+- name: Create .ssh directory
   become: yes
-  copy:
-    src:   bashrc
-    dest:  /home/pierre/.bashrc
-    owner: pierre
-    group: pierre
-    mode:  0644
+  ansible.builtin.file:
+    path:  "/home/{{item}}/.ssh"
+    state: directory
+    owner: "{{item}}"
+    group: "{{item}}"
+    mode:  0700
+  loop:
+    - guest
+    - pierre
+
+- name: Create bin directory
+  become: yes
+  ansible.builtin.file:
+    path:  "/home/{{item}}/bin"
+    state: directory
+    owner: "{{item}}"
+    group: "{{item}}"
+    mode:  0755
+  loop:
+    - pierre
 
