@@ -19,6 +19,14 @@ server {
       # as directory, then fall back to displaying a 404.
       try_files $uri $uri/ =404;
     }
+
+    location ~ "/upload/([-0-9a-zA-Z_.]*)$" {
+        #dav_methods  PUT DELETE MKCOL COPY MOVE;
+        dav_methods  PUT;
+        client_body_temp_path  /tmp/upload;
+        create_full_put_path   on;
+        dav_access             group:rw  all:rw;
+    }
 }
 
 server {

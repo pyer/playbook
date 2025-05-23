@@ -34,8 +34,8 @@
   ansible.builtin.file:
     path:  "/srv/{{item}}"
     state: directory
-    owner: pierre
-    group: pierre
+    owner: www-data
+    group: www-data
     mode:  0755
   notify: reload Nginx
   loop:
@@ -81,8 +81,8 @@
   ansible.builtin.copy:
     src:   "favicon.ico"
     dest:  "/srv/{{item}}/favicon.ico"
-    owner: pierre
-    group: pierre
+    owner: www-data
+    group: www-data
     mode:  0444
   loop:
     - "private"
